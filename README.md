@@ -75,7 +75,9 @@ The following data will be provided to the model.
 	concept.
 - **`overall_accuracy`** — Student's accuracy across all previous questions.
 - **`overall_attempt_count`** — Total number of previous questions answered.
-- **`concept_id`** — A numberic identifier for a concept
+- **`concept_id`** — A numeric identifier for a concept
+- **`subject_id`** — A numeric identifier for the general subject of the
+	concept.
 - **``**
 
 #### Additional training data
