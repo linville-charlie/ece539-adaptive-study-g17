@@ -55,20 +55,44 @@ model to generate a question around.
 
 ## ANN Input Data
 
-- **`time_last_asked`** A timestamp representing the last time this user was
-	exposed to this concept.
-- **`num_times_aksed`** The number of times a question about this topic was
-	answered by the User.
-- **`ave_time_elapsed`** The average time elapsed considering all questions
-	about this concept.
-- **`accuracy`** The average accuracy of the User on all questions about this
-	concept.
-- **`recent_ave_time_elapsed`** The average time elapsed of all _recent_
-	questions about this concept.
-- **`recent_accuracy`** The average accuracy of the user on all _recent_
-	questions about this concept.
+The following data will be provided to the model.
 
-'Recent' is defined to be the `floor(10*log(num_times_asked+1))` most recent instances of the question being asked, or the most recent 50 times. [1]
+#### Input Data
+
+- **`previous_response_time`** — Time spent answering the previous question.
+- **`previous_correct`** — Whether the previous answer was correct.
+- **`time_since_previous_interaction`** — Time elapsed since the student's last
+	interaction.
+- **`time_since_last_skill_attempt`** — Time since the specific concept was last
+	practiced.
+- **`skill_attempt_count`** — Number of previous attempts on that concept.
+- **`skill_avg_response_time`** — Average response time for that concept.
+- **`skill_accuracy`** — Overall historical accuracy for that concept.
+- **`recent_skill_avg_response_time`** — Average response time over _recent_
+	attempts.
+- **`recent_skill_accuracy`** — Accuracy over the most _recent_ attempts.
+- **`skill_correct_streak`** — Number of consecutive correct responses for the
+	concept.
+- **`overall_accuracy`** — Student's accuracy across all previous questions.
+- **`overall_attempt_count`** — Total number of previous questions answered.
+- **`concept_id`** — A numberic identifier for a concept
+- **``**
+
+#### Additional training data
+
+The following data may be used during training, but will otherwise not be given
+to the model.
+
+- **`learner_id`** — Allows for training to keep track of multuple learners.
+- **`timestamp`** — The timestamp data used to calculate some of the above
+	features.
+- **`response_time`** — Response time data extracted to calculate some of the
+	above features.
+- **`correct`** — Accuracy data  extracted to calculate some of the above
+	features.
+
+'Recent' is defined to be the `floor(10*log(skill_attempt_count+1))` most recent
+instances of the question being asked, or the most recent 50 times. [1]
 
 ---
 1. This provides for 125,891 asks about a concept before the definition changes;
