@@ -1,0 +1,5 @@
+{
+    "black-formatter.path": [
+        "./.venv/bin/black"
+    ]
+}
