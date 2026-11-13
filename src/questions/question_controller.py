@@ -1,7 +1,7 @@
 """Management of the questioning system."""
 
-from questions.question import Question
 from database.database_controller import DatabaseController
+from questions.question import Question
 
 
 class QuestionController:
