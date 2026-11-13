@@ -1,3 +1,0 @@
-# Final
-
-Integrated team deliverable.
