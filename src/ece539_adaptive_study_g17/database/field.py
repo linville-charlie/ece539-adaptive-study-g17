@@ -1,4 +1,5 @@
 """The structure into which concepts and their facts are embedded."""
+
 from enum import Enum
 from typing import TYPE_CHECKING
 
@@ -27,6 +28,7 @@ class Field(_BaseDatabaseTable):
 
     field_columns: Mapped[list[FieldColumn]] = relationship(back_populates="field")
 
+
 class DataType(Enum):
     """A data type stored in a concept."""
 
@@ -34,6 +36,7 @@ class DataType(Enum):
     Boolean = 1
     Text = 2
     Image = 3
+
 
 class FieldColumn(_BaseDatabaseTable):
     """A column of data in a given field."""
@@ -49,4 +52,3 @@ class FieldColumn(_BaseDatabaseTable):
     field: Mapped[Field] = relationship(back_populates="field_columns")
 
     facts: Mapped[list[Fact]] = relationship(back_populates="field_column")
-

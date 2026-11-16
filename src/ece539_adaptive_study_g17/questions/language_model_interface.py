@@ -14,7 +14,7 @@ class LanguageModelInterface:
         """Get a question from the selected concept."""
         raise NotImplementedError  # TODO
 
-    def generate_distractors(self, quesiton: Question) -> list[str]:
+    def generate_distractors(self, question: Question) -> list[str]:
         """Generate distracts for multiple-choice & similar questions."""
         raise NotImplementedError  # TODO
 

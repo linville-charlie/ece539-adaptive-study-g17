@@ -1,4 +1,5 @@
 """Interact with the local sqlite database using `sqlalchemy`."""
+
 from sqlalchemy import Engine
 
 from ece539_adaptive_study_g17.database.concept import Concept, ConceptEvaluationData

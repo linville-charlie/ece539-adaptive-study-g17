@@ -1,4 +1,5 @@
 """Manages database and project concepts."""
+
 from dataclasses import dataclass
 from datetime import datetime
 from typing import TYPE_CHECKING
@@ -20,16 +21,9 @@ class Concept(_BaseDatabaseTable):
     __tablename__ = CONCEPT_TABLE
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    # TODO Confirm training data
-    last_attempt_timestamp: Mapped[datetime|None] = mapped_column(
+    last_attempt_timestamp: Mapped[datetime | None] = mapped_column(
         TIMESTAMP(timezone=True)
     )
-    attempt_count: Mapped[int] = mapped_column(default=0)
-    avg_response_time_ms: Mapped[float] = mapped_column(default=0)
-    accuracy: Mapped[float] = mapped_column(default=0)
-    recent_response_times_ms: Mapped[float] = mapped_column(default=0)
-    recent_accuracy: Mapped[float] = mapped_column(default=0)
-    correct_streak: Mapped[int] = mapped_column(default=0)
 
     field_id: Mapped[int] = mapped_column(ForeignKey(FIELD_TABLE_ID))
     field: Mapped[Field] = relationship()
@@ -41,6 +35,17 @@ class Concept(_BaseDatabaseTable):
         raise NotImplementedError  # TODO
 
 
+class Attempt(_BaseDatabaseTable):
+    """A particular attempt to answer a question on a given concept."""
+
+    concept_id: Mapped[int] = mapped_column(
+        ForeignKey("concept.id", ondelete="CASCADE"), index=True
+    )
+    timestamp_ms: Mapped[int] = mapped_column(index=True)
+    response_time_ms: Mapped[int]
+    was_correct: Mapped[bool]
+
+
 @dataclass(frozen=True, slots=True)
 class ConceptEvaluationData:
     """The data stored in a concept that the selector uses to evaluate it."""
@@ -48,8 +53,8 @@ class ConceptEvaluationData:
     # TODO Confirm training data
     concept_id: int
     attempt_count: int
-    avg_response_time_ms: float
+    avg_response_time_ms: int
     accuracy: float
-    recent_avg_response_time_ms: float
+    recent_avg_response_time_ms: int
     recent_accuracy: float
     correct_streak: int

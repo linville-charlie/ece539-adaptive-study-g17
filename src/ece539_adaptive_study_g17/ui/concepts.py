@@ -21,9 +21,7 @@ class ConceptManagementUIComponent(Frame):
 
     _database_controller: DatabaseController
 
-    def __init__(
-        self, database_controller: DatabaseController
-    ) -> None:
+    def __init__(self, database_controller: DatabaseController) -> None:
         """Create a concept management UI component."""
         super().__init__()
         raise NotImplementedError  # TODO

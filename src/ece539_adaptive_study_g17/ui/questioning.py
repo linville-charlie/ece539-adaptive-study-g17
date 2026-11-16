@@ -16,9 +16,7 @@ class QuestioningUIComponent(Frame):
 
     __question_controller: QuestionController
 
-    def __init__(
-        self, question_controller: QuestionController
-    ) -> None:
+    def __init__(self, question_controller: QuestionController) -> None:
         """Create a Questioning UI Component."""
         super().__init__()
         raise NotImplementedError  # TODO
