@@ -1,9 +1,10 @@
 # ece539-adaptive-study-g17
+
 ECE 539 Team G17 integration project: adaptive study question selection and generation
 
 ## Project TODOs
 
-### Design and Preperatory Work (Nov. 1 - Nov. 8)
+### Design and Preparatory Work (Nov. 1 - Nov. 8)
 
 - [ ] Determine input data format
 - [ ] Assemble training, testing, and evaluation datasets
