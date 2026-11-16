@@ -52,10 +52,10 @@ class FieldColumn(_BaseDatabaseTable):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(nullable=False)
     data_type: Mapped[DataType] = mapped_column(
         SQLEnum(
             DataType,
-            values_callable=lambda e: [m.value for m in e],
             create_constraint=True,
             native_enum=False,
         )

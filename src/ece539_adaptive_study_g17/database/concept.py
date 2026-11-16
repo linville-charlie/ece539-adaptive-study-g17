@@ -23,7 +23,7 @@ class Concept(_BaseDatabaseTable):
     id: Mapped[int] = mapped_column(primary_key=True)
 
     field_id: Mapped[int] = mapped_column(
-        ForeignKey(FIELD_TABLE_ID, ondelete="RESTRICT")
+        ForeignKey(FIELD_TABLE_ID, ondelete="RESTRICT"), index=True
     )
     field: Mapped[Field] = relationship()
 
