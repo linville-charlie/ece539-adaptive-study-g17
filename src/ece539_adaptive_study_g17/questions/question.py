@@ -2,8 +2,8 @@
 
 from abc import ABC
 
-from database.concept import Concept
-from database.fact import Fact
+from ece539_adaptive_study_g17.database.concept import Concept
+from ece539_adaptive_study_g17.database.fact import Fact
 
 
 class Question:

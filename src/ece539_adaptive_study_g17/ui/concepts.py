@@ -2,7 +2,7 @@
 
 from tkinter import Tk, Widget
 
-from database.database_controller import DatabaseController
+from ece539_adaptive_study_g17.database.database_controller import DatabaseController
 
 
 class ConceptManagementUIComponent(Widget):
@@ -26,3 +26,4 @@ class ConceptManagementUIComponent(Widget):
     ) -> None:
         """Create a concept management UI component."""
         super().__init__(master=parent, widgetName=name)
+        raise NotImplementedError  # TODO

@@ -1,7 +1,7 @@
 """Uses the trained model to select the next question."""
 
-from database.concept import Concept, ConceptEvaluationData
-from database.database_controller import DatabaseController
+from ece539_adaptive_study_g17.database.concept import Concept, ConceptEvaluationData
+from ece539_adaptive_study_g17.database.database_controller import DatabaseController
 
 
 class ConceptSelector:
@@ -11,6 +11,8 @@ class ConceptSelector:
 
     def __init__(self, database_controller: DatabaseController) -> None:
         """Create a question selector."""
+        raise NotImplementedError  # TODO
 
     def select_concept(self, concept_eval_data: list[ConceptEvaluationData]) -> Concept:
         """Select a concept to build a question around."""
+        raise NotImplementedError  # TODO

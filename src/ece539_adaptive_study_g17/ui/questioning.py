@@ -2,7 +2,7 @@
 
 from tkinter import Tk, Widget
 
-from questions.question_controller import QuestionController
+from ece539_adaptive_study_g17.questions.question_controller import QuestionController
 
 
 class QuestioningUIComponent(Widget):
@@ -21,3 +21,4 @@ class QuestioningUIComponent(Widget):
     ) -> None:
         """Create a Questioning UI Component."""
         super().__init__(master=parent, widgetName=name)
+        raise NotImplementedError  # TODO

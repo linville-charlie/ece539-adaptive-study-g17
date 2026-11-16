@@ -5,12 +5,12 @@ from typing import TYPE_CHECKING
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from database import CONCEPT_TABLE, FIELD_TABLE_ID
-from database.base_table import _BaseDatabaseTable
-from database.fact import Fact
+from ece539_adaptive_study_g17.database import CONCEPT_TABLE, FIELD_TABLE_ID
+from ece539_adaptive_study_g17.database.base_table import _BaseDatabaseTable
+from ece539_adaptive_study_g17.database.fact import Fact
 
 if TYPE_CHECKING:
-    from database.field import Field
+    from ece539_adaptive_study_g17.database.field import Field
 
 
 class Concept(_BaseDatabaseTable):
@@ -28,7 +28,9 @@ class Concept(_BaseDatabaseTable):
 
     def get_evaluation_data(self) -> ConceptEvaluationData:
         """Get the historic data for use in selection."""
+        raise NotImplementedError  # TODO
 
 
 class ConceptEvaluationData:
     """The data stored in a concept that the selector uses to evaluate it."""
+    # TODO Add training data (accuracy, recent accuracy, etc.)

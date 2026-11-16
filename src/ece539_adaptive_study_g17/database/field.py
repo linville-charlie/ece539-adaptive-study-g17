@@ -6,10 +6,14 @@ from typing import TYPE_CHECKING
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from database import FIELD_COLUMN_TABLE, FIELD_TABLE, FIELD_TABLE_ID
+from ece539_adaptive_study_g17.database import (
+    FIELD_COLUMN_TABLE,
+    FIELD_TABLE,
+    FIELD_TABLE_ID,
+)
 
 if TYPE_CHECKING:
-    from database.fact import Fact
+    from ece539_adaptive_study_g17.database.fact import Fact
 
 
 class Field:

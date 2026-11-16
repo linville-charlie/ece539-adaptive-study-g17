@@ -5,11 +5,15 @@ from typing import TYPE_CHECKING
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from database import CONCEPT_TABLE_ID, FACT_TABLE, FIELD_COLUMN_TABLE_ID
+from ece539_adaptive_study_g17.database import (
+    CONCEPT_TABLE_ID,
+    FACT_TABLE,
+    FIELD_COLUMN_TABLE_ID,
+)
 
 if TYPE_CHECKING:
-    from database.concept import Concept
-    from database.field import FieldColumn
+    from ece539_adaptive_study_g17.database.concept import Concept
+    from ece539_adaptive_study_g17.database.field import FieldColumn
 
 
 class Fact:

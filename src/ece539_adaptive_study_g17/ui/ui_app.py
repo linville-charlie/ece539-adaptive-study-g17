@@ -2,10 +2,10 @@
 
 from tkinter import Tk
 
-from database.database_controller import DatabaseController
+from ece539_adaptive_study_g17.database.database_controller import DatabaseController
+from ece539_adaptive_study_g17.questions.question_controller import QuestionController
 from ece539_adaptive_study_g17.ui.concepts import ConceptManagementUIComponent
 from ece539_adaptive_study_g17.ui.questioning import QuestioningUIComponent
-from questions.question_controller import QuestionController
 
 
 class UIApp(Tk):
@@ -38,3 +38,4 @@ class UIApp(Tk):
 
     def run(self) -> None:
         """Execute the application."""
+        raise NotImplementedError  # TODO
