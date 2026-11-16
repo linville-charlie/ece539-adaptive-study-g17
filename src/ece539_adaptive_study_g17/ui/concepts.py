@@ -1,11 +1,11 @@
 """UI elements for the management of concepts by the user."""
 
-from tkinter import Tk, Widget
+from tkinter import Frame
 
 from ece539_adaptive_study_g17.database.database_controller import DatabaseController
 
 
-class ConceptManagementUIComponent(Widget):
+class ConceptManagementUIComponent(Frame):
     """Main UI element for the management of concepts by the user.
 
     It is able to:
@@ -19,11 +19,11 @@ class ConceptManagementUIComponent(Widget):
     # Probably make this just the UI component rather than a unified view/controller
     #   setup.
 
-    __database_controller: DatabaseController
+    _database_controller: DatabaseController
 
     def __init__(
-        self, parent: Widget | Tk, name: str, database_controller: DatabaseController
+        self, database_controller: DatabaseController
     ) -> None:
         """Create a concept management UI component."""
-        super().__init__(master=parent, widgetName=name)
+        super().__init__()
         raise NotImplementedError  # TODO

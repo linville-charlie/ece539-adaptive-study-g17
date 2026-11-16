@@ -11,13 +11,13 @@ class LanguageModelInterface:
         raise NotImplementedError  # TODO
 
     def get_question_text(self, question: Question) -> str:
-        """Get a quesiton from the selected concept."""
+        """Get a question from the selected concept."""
         raise NotImplementedError  # TODO
 
-    def generate_distractors(self, quesiton: Question) -> str:
-        """Generate distractors for multiple-choice & similar questions."""
+    def generate_distractors(self, quesiton: Question) -> list[str]:
+        """Generate distracts for multiple-choice & similar questions."""
         raise NotImplementedError  # TODO
 
-    def evaluate_quesiton_answer(self, question: Question, user_answer: str) -> bool:
+    def evaluate_question_answer(self, question: Question, user_answer: str) -> bool:
         """Evaluate if a short-answer response is correct based on the question."""
         raise NotImplementedError  # TODO

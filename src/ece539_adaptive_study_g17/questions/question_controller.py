@@ -15,6 +15,6 @@ class QuestionController:
         """Select the next question the user should see."""
         raise NotImplementedError  # TODO
 
-    def accept_quesiton_answer(self, question: Question, answer: str) -> None:
-        """Accept the answer to a quesiton and update data correspondingly."""
+    def accept_question_answer(self, question: Question, answer: str) -> None:
+        """Accept the answer to a question and update data correspondingly."""
         raise NotImplementedError  # TODO

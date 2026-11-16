@@ -1,11 +1,11 @@
 """The main ask-answer-eval-repeat loop of the program."""
 
-from tkinter import Tk, Widget
+from tkinter import Frame
 
 from ece539_adaptive_study_g17.questions.question_controller import QuestionController
 
 
-class QuestioningUIComponent(Widget):
+class QuestioningUIComponent(Frame):
     """The main UI component for the ask-answer-eval-repeat loop of the program.
 
     Shows the user a question given by the `QuestionController` and the required
@@ -17,8 +17,8 @@ class QuestioningUIComponent(Widget):
     __question_controller: QuestionController
 
     def __init__(
-        self, parent: Widget | Tk, name: str, question_controller: QuestionController
+        self, question_controller: QuestionController
     ) -> None:
         """Create a Questioning UI Component."""
-        super().__init__(master=parent, widgetName=name)
+        super().__init__()
         raise NotImplementedError  # TODO

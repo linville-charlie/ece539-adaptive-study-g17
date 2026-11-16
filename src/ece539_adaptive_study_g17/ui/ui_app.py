@@ -18,21 +18,17 @@ class UIApp(Tk):
 
     def __init__(
         self,
-        question_controler: QuestionController,
+        question_controller: QuestionController,
         database_controller: DatabaseController,
     ) -> None:
         """Create the UI manager."""
         super().__init__()
-        self.__question_controller = question_controler
+        self.__question_controller = question_controller
         self.__database_controller = database_controller
         self.__questioning_component = QuestioningUIComponent(
-            parent=self,
-            name="QuestioningUIComponent",
             question_controller=self.__question_controller,
         )
         self.__concept_management_component = ConceptManagementUIComponent(
-            parent=self,
-            name="ConceptManagementUIComponent",
             database_controller=self.__database_controller,
         )
 

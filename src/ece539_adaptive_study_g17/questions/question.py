@@ -1,7 +1,5 @@
 """Questions to ask the user and their types."""
 
-from abc import ABC
-
 from ece539_adaptive_study_g17.database.concept import Concept
 from ece539_adaptive_study_g17.database.fact import Fact
 
@@ -17,10 +15,11 @@ class Question:
         type: QuestionType,
     ) -> None:
         """Create a question."""
+        raise NotImplementedError  # TODO
 
 
-class QuestionType(ABC):
-    """A type of quesiton."""
+class QuestionType:
+    """A type of question."""
 
 
 class MultipleChoiceQuestion(QuestionType):
@@ -30,4 +29,4 @@ class MultipleChoiceQuestion(QuestionType):
 
     def __init__(self) -> None:
         """Specify a multiple choice question."""
-        super().__init__()
+        raise NotImplementedError  # TODO
