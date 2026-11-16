@@ -1,5 +1,8 @@
 """Interface with the FLAN-T5 SLM to produce question text and evaluate the response."""
 
+from dataclasses import dataclass
+
+from ece539_adaptive_study_g17.questions.answer import Answer
 from ece539_adaptive_study_g17.questions.question import Question
 
 
@@ -18,6 +21,15 @@ class LanguageModelInterface:
         """Generate distracts for multiple-choice & similar questions."""
         raise NotImplementedError  # TODO
 
-    def evaluate_question_answer(self, question: Question, user_answer: str) -> bool:
-        """Evaluate if a short-answer response is correct based on the question."""
+    def evaluate_question_answer(self, answer: Answer) -> AnswerResult:
+        """Evaluate if a the user's response is correct."""
         raise NotImplementedError  # TODO
+
+
+@dataclass(frozen=True, slots=True)
+class AnswerResult:
+    """Language Model answer evaluation result."""
+
+    is_correct: bool
+    correct_answer: str  # to show the user
+    explanation: str | None = None

@@ -23,14 +23,16 @@ class Fact(_BaseDatabaseTable):
     __tablename__ = FACT_TABLE
 
     concept_id: Mapped[int] = mapped_column(
-        ForeignKey(CONCEPT_TABLE_ID), primary_key=True
+        ForeignKey(CONCEPT_TABLE_ID, ondelete="CASCADE"), primary_key=True
     )
     concept: Mapped[Concept] = relationship(back_populates="facts")
 
     field_column_id: Mapped[int] = mapped_column(
-        ForeignKey(FIELD_COLUMN_TABLE_ID), primary_key=True
+        ForeignKey(FIELD_COLUMN_TABLE_ID, ondelete="CASCADE"),
+        primary_key=True,
+        index=True,
     )
     field_column: Mapped[FieldColumn] = relationship(back_populates="facts")
 
-    value_str: Mapped[str] = mapped_column()
+    value_str: Mapped[str | None] = mapped_column()
     value_blob: Mapped[bytes | None] = mapped_column()

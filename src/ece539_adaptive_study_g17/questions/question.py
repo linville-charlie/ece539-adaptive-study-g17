@@ -30,3 +30,11 @@ class MultipleChoiceQuestion(QuestionType):
     def __init__(self) -> None:
         """Specify a multiple choice question."""
         raise NotImplementedError  # TODO
+
+
+class ShortAnswerQuestion(QuestionType):
+    """A short answer question."""
+
+    def __init__(self) -> None:
+        """Specify a multiple choice question."""
+        raise NotImplementedError  # TODO

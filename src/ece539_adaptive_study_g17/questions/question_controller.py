@@ -1,6 +1,8 @@
 """Management of the questioning system."""
 
 from ece539_adaptive_study_g17.database.database_controller import DatabaseController
+from ece539_adaptive_study_g17.questions.answer import Answer
+from ece539_adaptive_study_g17.questions.language_model_interface import AnswerResult
 from ece539_adaptive_study_g17.questions.question import Question
 
 
@@ -15,6 +17,6 @@ class QuestionController:
         """Select the next question the user should see."""
         raise NotImplementedError  # TODO
 
-    def accept_question_answer(self, question: Question, answer: str) -> None:
+    def accept_question_answer(self, answer: Answer) -> AnswerResult:
         """Accept the answer to a question and update data correspondingly."""
         raise NotImplementedError  # TODO
