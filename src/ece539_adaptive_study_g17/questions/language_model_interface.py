@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 
+from ece539_adaptive_study_g17.database.fact import Fact
 from ece539_adaptive_study_g17.questions.answer import Answer
 from ece539_adaptive_study_g17.questions.question import Question
 
@@ -17,7 +18,9 @@ class LanguageModelInterface:
         """Get a question from the selected concept."""
         raise NotImplementedError  # TODO
 
-    def generate_distractors(self, question: Question) -> list[str]:
+    def generate_distractors(
+        self, question: Question, similar_facts: list[Fact]
+    ) -> list[str]:
         """Generate distracts for multiple-choice & similar questions."""
         raise NotImplementedError  # TODO
 
