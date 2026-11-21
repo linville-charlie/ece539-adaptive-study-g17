@@ -3,22 +3,15 @@
 ECE 539 Team G17 integration project: adaptive study question selection and
 generation.
 
-## Workspace layout
-
-- `P1/` through `P4/`: individual teammate workspaces.
-- `final/`: integrated team deliverable.
-
-The member-to-workspace mapping belongs in the private Canvas proposal.
-
 ## Project TODOs
 
-### Design and Preperatory Work (Nov. 1 - Nov. 8)
+### Design and Preparatory Work (Nov. 1 - Nov. 8)
 
 - [x] Determine input data format
 - [ ] Assemble training, testing, and evaluation datasets
-- [x] Prepare compute for training
-- [x] Identify backup compute
-- [ ] Design non-neural components
+- [X] Prepare compute for training
+- [X] Identify backup compute
+- [X] Design non-neural components
 
 ### Main Development (Nov. 9 - Nov. 22)
 
