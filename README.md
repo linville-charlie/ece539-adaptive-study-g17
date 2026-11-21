@@ -10,7 +10,7 @@ ECE 539 Team G17 integration project: adaptive study question selection and gene
 - [ ] Assemble training, testing, and evaluation datasets
 - [ ] Prepare compute for training
 - [ ] Identify backup compute
-- [ ] Design non-neural components
+- [X] Design non-neural components
 
 ### Main Development (Nov. 9 - Nov. 22)
 
