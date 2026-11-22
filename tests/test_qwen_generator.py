@@ -31,18 +31,20 @@ from urllib.request import Request
 
 import pytest
 
+from ece539_adaptive_study_g17.database.concept import Concept
+from ece539_adaptive_study_g17.database.fact import Fact
 from ece539_adaptive_study_g17.questions import qwen_generator
-from ece539_adaptive_study_g17.questions.answer import Answer
-from ece539_adaptive_study_g17.questions.question import Question
+from ece539_adaptive_study_g17.questions.answer import ShortAnswerAnswer
+from ece539_adaptive_study_g17.questions.question import (
+    Question,
+    QuestionType,
+    ShortAnswerQuestion,
+)
 from ece539_adaptive_study_g17.questions.qwen_generator import QwenQuestionGenerator
 
 
-class ShortAnswerQuestion:
-    pass
-
-
 def question(
-    kind: object | None = None,
+    kind: QuestionType | None = None,
     correct_answer: str = "photosynthesis",
     context: str = (
         "Plants convert light energy to chemical energy during photosynthesis."
@@ -50,30 +52,26 @@ def question(
 ) -> Question:
     if kind is None:
         kind = ShortAnswerQuestion()
-    return cast(
-        Question,
+    concept = cast(Concept, SimpleNamespace(field=SimpleNamespace(name="Biology")))
+    context_fact = cast(
+        Fact,
         SimpleNamespace(
-            concept=SimpleNamespace(field=SimpleNamespace(name="Biology")),
-            context_facts=[
-                SimpleNamespace(
-                    value_str=context,
-                    field_column=SimpleNamespace(name="description"),
-                )
-            ],
-            answer_fact=SimpleNamespace(
-                value_str=correct_answer,
-                field_column=SimpleNamespace(name="process"),
-            ),
-            type=kind,
+            value_str=context,
+            field_column=SimpleNamespace(name="description"),
         ),
     )
-
-
-def answer(response: str) -> Answer:
-    data = question()
-    return cast(
-        Answer, SimpleNamespace(question=lambda: data, payload=lambda: response)
+    answer_fact = cast(
+        Fact,
+        SimpleNamespace(
+            value_str=correct_answer,
+            field_column=SimpleNamespace(name="process"),
+        ),
     )
+    return Question(concept, [context_fact], answer_fact, kind)
+
+
+def answer(response: str) -> ShortAnswerAnswer:
+    return ShortAnswerAnswer(question(), response)
 
 
 def test_question_uses_facts_and_rejects_answer_leak() -> None:
@@ -111,7 +109,9 @@ def test_short_answer_can_be_a_single_letter() -> None:
 def test_rejects_other_question_types() -> None:
     generator = QwenQuestionGenerator()
     with pytest.raises(ValueError, match="type"):
-        generator.get_question_text(question(object()))
+        generator.get_question_text(question(QuestionType()))
+    with pytest.raises(TypeError, match="question"):
+        ShortAnswerAnswer(question(QuestionType()), "photosynthesis")
 
 
 def test_grades_equivalent_answer() -> None:

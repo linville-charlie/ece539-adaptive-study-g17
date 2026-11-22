@@ -17,8 +17,9 @@
 # Authors of this file:
 #
 # - Quentin Schultz
+# - Charlie Linville
 #
-# This file header was last modified 21 Nov 2026.
+# This file header was last modified 22 Nov 2026.
 """A user's answer to a question."""
 
 from typing import Protocol
@@ -56,10 +57,19 @@ class MultipleChoiceAnswer(Answer):
 
 
 class ShortAnswerAnswer(Answer):
-    """The answer to a multiple choice question."""
+    """The answer to a short answer question."""
 
-    def __init__(self, question: ShortAnswerQuestion, answer: int) -> None:
-        """Create a new multiple choice answer."""
-        raise NotImplementedError  # TODO
+    def __init__(self, question: Question, answer: str) -> None:
+        """Store the question and the learner's response."""
+        if not isinstance(question.type, ShortAnswerQuestion):
+            raise TypeError("question")
+        self._question = question
+        self._answer = answer
 
-    # TODO Implement protocol methods.
+    def question(self) -> Question:
+        """Get the question this answer is for."""
+        return self._question
+
+    def payload(self) -> str:
+        """Get the learner's response."""
+        return self._answer
