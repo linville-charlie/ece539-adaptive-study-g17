@@ -21,12 +21,16 @@
 # This file header was last modified 21 Nov 2026.
 """An attempt to answer a question on a specific concept."""
 
+from typing import TYPE_CHECKING
+
 from sqlalchemy import ForeignKey, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ece539_adaptive_study_g17.database import ATTEMPT_TABLE, CONCEPT_TABLE_ID
 from ece539_adaptive_study_g17.database.base_table import _BaseDatabaseTable
-from ece539_adaptive_study_g17.database.concept import Concept
+
+if TYPE_CHECKING:
+    from ece539_adaptive_study_g17.database.concept import Concept
 
 
 class Attempt(_BaseDatabaseTable):
