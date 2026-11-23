@@ -27,7 +27,7 @@ from math import floor, log
 from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey, select
-from sqlalchemy.orm import Mapped, Session, mapped_column, relationship
+from sqlalchemy.orm import Mapped, Session, mapped_column, relationship, selectinload
 
 from ece539_adaptive_study_g17.database import CONCEPT_TABLE, FIELD_TABLE_ID
 from ece539_adaptive_study_g17.database.attempt import Attempt
@@ -64,28 +64,44 @@ class Concept(_BaseDatabaseTable):
     def get_evaluation_data(self) -> ConceptEvaluationData:
         """Get the historic data for use in selection."""
 
-        def _get_accuracy(attempts: list[Attempt], count: int) -> float:
-            return (
-                sum([1 if attempt.was_correct else 0 for attempt in attempts]) / count
+        def _get_accuracy(attempts: list[Attempt]) -> float:
+            return sum([1 if attempt.was_correct else 0 for attempt in attempts]) / len(
+                attempts
             )
 
-        def _get_avg_time(attempts: list[Attempt], count: int) -> int:
-            return sum([attempt.response_time_ms for attempt in attempts]) // count
+        def _get_avg_time(attempts: list[Attempt]) -> int:
+            return sum([attempt.response_time_ms for attempt in attempts]) // len(
+                attempts
+            )
 
         attempt_count = len(self.attempts)
-        recent_attempt_count = max(floor(10 * log(attempt_count + 1)), MAX_RECENCY)
-        sorted_attempts = sorted(self.attempts, key=lambda x: x.timestamp_ms)
-        recent_attempts = sorted_attempts[-recent_attempt_count:]
-        average_attempt_time = _get_avg_time(sorted_attempts, attempt_count)
-        attempt_accuracy = _get_accuracy(sorted_attempts, attempt_count)
-        recent_attempt_time = _get_avg_time(recent_attempts, recent_attempt_count)
-        recent_attempt_accuracy = _get_accuracy(recent_attempts, recent_attempt_count)
+
+        if attempt_count == 0:
+            return ConceptEvaluationData(
+                concept_id=self.id,
+                attempt_count=0,
+                avg_response_time_ms=0,
+                accuracy=0,
+                recent_avg_response_time_ms=0,
+                recent_accuracy=0,
+                correct_streak=0,
+            )
+
+        recent_attempt_count = min(
+            floor(10 * log(attempt_count + 1)), attempt_count, MAX_RECENCY
+        )
+        recent_attempts = self.attempts[-recent_attempt_count:]
+        average_attempt_time = _get_avg_time(self.attempts)
+        attempt_accuracy = _get_accuracy(self.attempts)
+        recent_attempt_time = _get_avg_time(recent_attempts)
+        recent_attempt_accuracy = _get_accuracy(recent_attempts)
         try:
-            correct_streak_len = [attempt.was_correct for attempt in sorted_attempts][
+            correct_streak_len = [attempt.was_correct for attempt in self.attempts][
                 ::-1
             ].index(False)
         except ValueError:
             correct_streak_len = attempt_count
+
         return ConceptEvaluationData(
             concept_id=self.id,
             attempt_count=attempt_count,
@@ -99,7 +115,9 @@ class Concept(_BaseDatabaseTable):
     @classmethod
     def get_all_concepts(cls, session: Session) -> Sequence[Concept]:
         """Return a list of all concepts stored in the database."""
-        return session.scalars(select(Concept)).all()
+        return session.scalars(
+            select(Concept).options(selectinload(Concept.attempts))
+        ).all()
 
     @classmethod
     def get_evaluation_data_for_all_concepts(

@@ -50,4 +50,4 @@ class Attempt(_BaseDatabaseTable):
     concept_id: Mapped[int] = mapped_column(
         ForeignKey(CONCEPT_TABLE_ID, ondelete="CASCADE")
     )
-    concept: Mapped[Concept] = relationship(back_populates="attempts")
+    concept: Mapped["Concept"] = relationship(back_populates="attempts")  # noqa: UP037
