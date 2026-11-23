@@ -34,15 +34,18 @@ from ece539_adaptive_study_g17.database.database_controller import DatabaseContr
 from ece539_adaptive_study_g17.questions.question_controller import QuestionController
 from ece539_adaptive_study_g17.ui.ui_app import UIApp
 
-db_file = (
-    platformdirs.user_data_path("Adaptive Study", "ECE/CS/MS 359 Group 17")
-    / "adaptive_study_data.db"
-)
-engine = create_engine("sqlite:///" + str(db_file))
-
 
 def main() -> None:
     """Run the program."""
+    db_file = (
+        platformdirs.user_data_path("Adaptive Study", "ECE/CS/MS 359 Group 17")
+        / "adaptive_study_data.db"
+    )
+    if not db_file.exists():
+        db_file.parent.mkdir(parents=True)
+
+    engine = create_engine("sqlite:///" + str(db_file))
+
     database_controller = DatabaseController(engine)
     question_controller = QuestionController(database_controller=database_controller)
     ui_app = UIApp(
