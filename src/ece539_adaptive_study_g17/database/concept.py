@@ -17,10 +17,13 @@
 # Authors of this file:
 #
 # - Quentin Schultz
+# - Ella Wulf
 #
-# This file header was last modified 21 Nov 2026.
+# This file header was last modified 25 Nov 2026.
 """Manages database and project concepts."""
 
+import math
+from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -58,8 +61,59 @@ class Concept(_BaseDatabaseTable):
     )
 
     def get_evaluation_data(self) -> ConceptEvaluationData:
-        """Get the historic data for use in selection."""
-        raise NotImplementedError  # TODO
+        """Get the historic data for use in selection.
+
+        A concept with no attempts gets zeros everywhere.
+        """
+        # Oldest first. The relationship is already ordered when loaded from the
+        # database; sorting again also covers attempts added in this session.
+        attempts = sorted(self.attempts, key=lambda attempt: attempt.timestamp_ms)
+        recent = attempts[len(attempts) - recent_window_size(len(attempts)) :]
+
+        # Count correct answers in a row, walking back from the newest attempt.
+        streak = 0
+        for attempt in reversed(attempts):
+            if not attempt.was_correct:
+                break
+            streak += 1
+
+        return ConceptEvaluationData(
+            concept_id=self.id,
+            attempt_count=len(attempts),
+            avg_response_time_ms=_average_response_time_ms(attempts),
+            accuracy=_accuracy(attempts),
+            recent_avg_response_time_ms=_average_response_time_ms(recent),
+            recent_accuracy=_accuracy(recent),
+            correct_streak=streak,
+        )
+
+
+RECENT_ATTEMPT_CAP = 50
+"""The most attempts that ever count as 'recent'."""
+
+
+def recent_window_size(attempt_count: int) -> int:
+    """Return how many of the newest attempts count as 'recent'.
+
+    Per the README: floor(10 * log10(attempt_count + 1)), at most 50, and never
+    more than the attempts that exist.
+    """
+    window = math.floor(10 * math.log10(attempt_count + 1))
+    return min(window, RECENT_ATTEMPT_CAP, attempt_count)
+
+
+def _accuracy(attempts: Sequence[Attempt]) -> float:
+    """Fraction of attempts answered correctly; 0.0 when there are none."""
+    if not attempts:
+        return 0.0
+    return sum(attempt.was_correct for attempt in attempts) / len(attempts)
+
+
+def _average_response_time_ms(attempts: Sequence[Attempt]) -> int:
+    """Mean response time, rounded to whole ms; 0 when there are none."""
+    if not attempts:
+        return 0
+    return round(sum(attempt.response_time_ms for attempt in attempts) / len(attempts))
 
 
 @dataclass(frozen=True, slots=True)
