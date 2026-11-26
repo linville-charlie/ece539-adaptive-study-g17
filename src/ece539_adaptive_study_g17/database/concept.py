@@ -133,7 +133,6 @@ class Concept(_BaseDatabaseTable):
 class ConceptEvaluationData:
     """The data stored in a concept that the selector uses to evaluate it."""
 
-    # TODO Confirm training data
     concept_id: int
     attempt_count: int
     avg_response_time_ms: int

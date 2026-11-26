@@ -52,24 +52,13 @@ The following data will be provided to the model.
 
 ### Input Data
 
-- **`previous_response_time`** — Time spent answering the previous question.
-- **`previous_correct`** — Whether the previous answer was correct.
-- **`time_since_previous_interaction`** — Time elapsed since the student's last
-  interaction.
-- **`time_since_last_skill_attempt`** — Time since the specific concept was last
-  practiced.
-- **`skill_attempt_count`** — Number of previous attempts on that concept.
-- **`skill_avg_response_time`** — Average response time for that concept.
-- **`skill_accuracy`** — Overall historical accuracy for that concept.
-- **`recent_skill_avg_response_time`** — Average response time over _recent_
-  attempts.
-- **`recent_skill_accuracy`** — Accuracy over the most _recent_ attempts.
-- **`skill_correct_streak`** — Number of consecutive correct responses for the
-  concept.
-- **`overall_accuracy`** — Student's accuracy across all previous questions.
-- **`overall_attempt_count`** — Total number of previous questions answered.
 - **`concept_id`** — A numeric identifier for a concept
-- **`subject_id`** — A numeric identifier for the general subject of the
+- **`attempt_count`** — Number of previous attempts on that concept.
+- **`avg_response_time_ms`** — Average response time for that concept.
+- **`accuracy`** — Overall historical accuracy for that concept.
+- **`recent_avg_response_time_ms`** — Average response time over _recent_ attempts.
+- **`recent_accuracy`** — Accuracy over the most _recent_ attempts.
+- **`correct_streak`** — Number of consecutive correct responses for the
   concept.
 
 #### Additional training data
