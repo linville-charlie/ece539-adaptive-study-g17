@@ -17,9 +17,8 @@
 # Authors of this file:
 #
 # - Quentin Schultz
-# - Aniketh Kancherla
 #
-# This file header was last modified 27 Nov 2026.
+# This file header was last modified 21 Nov 2026.
 """Adaptive Study.
 
 A project for UW-Madison's CS 539 _Intro to Artificial Neural Networks_ class.
@@ -28,22 +27,16 @@ This is a Neural Network-powered study assistant that tries to guess which facts
 you're most likely to get wrong to help you learn them more effectively.
 """
 
+import platformdirs
+from sqlalchemy import create_engine
+
+from ece539_adaptive_study_g17.database.database_controller import DatabaseController
+from ece539_adaptive_study_g17.questions.question_controller import QuestionController
+from ece539_adaptive_study_g17.ui.ui_app import UIApp
+
 
 def main() -> None:
     """Run the program."""
-    # ruff: noqa: PLC0415 -- Keep offline dataset commands independent of the GUI.
-    # Import the desktop application only when launching it. Dataset tools are headless.
-    import platformdirs
-    from sqlalchemy import create_engine
-
-    from ece539_adaptive_study_g17.database.database_controller import (
-        DatabaseController,
-    )
-    from ece539_adaptive_study_g17.questions.question_controller import (
-        QuestionController,
-    )
-    from ece539_adaptive_study_g17.ui.ui_app import UIApp
-
     db_file = (
         platformdirs.user_data_path("Adaptive Study", "ECE/CS/MS 359 Group 17")
         / "adaptive_study_data.db"

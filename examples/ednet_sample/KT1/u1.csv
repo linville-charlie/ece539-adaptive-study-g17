@@ -1,5 +1,0 @@
-timestamp,solving_id,question_id,user_answer,elapsed_time
-1000,1,q1,a,500
-1100,1,q2,c,500
-3000,2,q3,c,300
-4000,3,q1,d,400
