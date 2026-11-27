@@ -17,8 +17,9 @@
 # Authors of this file:
 #
 # - Quentin Schultz
+# - Charlie Linville
 #
-# This file header was last modified 21 Nov 2026.
+# This file header was last modified 22 Nov 2026.
 """Questions to ask the user and their types."""
 
 from ece539_adaptive_study_g17.database.concept import Concept
@@ -36,7 +37,10 @@ class Question:
         type: QuestionType,
     ) -> None:
         """Create a question."""
-        raise NotImplementedError  # TODO
+        self.concept = concept
+        self.context_facts = context_facts
+        self.answer_fact = answer_fact
+        self.type = type
 
 
 class QuestionType:
@@ -55,7 +59,3 @@ class MultipleChoiceQuestion(QuestionType):
 
 class ShortAnswerQuestion(QuestionType):
     """A short answer question."""
-
-    def __init__(self) -> None:
-        """Specify a multiple choice question."""
-        raise NotImplementedError  # TODO

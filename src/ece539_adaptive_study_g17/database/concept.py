@@ -17,8 +17,9 @@
 # Authors of this file:
 #
 # - Quentin Schultz
+# - Ella Wulf
 #
-# This file header was last modified 21 Nov 2026.
+# This file header was last modified 25 Nov 2026.
 """Manages database and project concepts."""
 
 from collections.abc import Sequence
@@ -87,9 +88,7 @@ class Concept(_BaseDatabaseTable):
                 correct_streak=0,
             )
 
-        recent_attempt_count = min(
-            floor(10 * log(attempt_count + 1)), attempt_count, MAX_RECENCY
-        )
+        recent_attempt_count = self._recent_window_size(attempt_count=attempt_count)
         recent_attempts = self.attempts[-recent_attempt_count:]
         average_attempt_time = _get_avg_time(self.attempts)
         attempt_accuracy = _get_accuracy(self.attempts)
@@ -111,6 +110,16 @@ class Concept(_BaseDatabaseTable):
             recent_accuracy=recent_attempt_accuracy,
             correct_streak=correct_streak_len,
         )
+
+    @staticmethod
+    def _recent_window_size(attempt_count: int) -> int:
+        """Return how many of the newest attempts count as 'recent'.
+
+        Per the README: floor(10 * log10(attempt_count + 1)), at most 50, and never
+        more than the attempts that exist.
+        """
+        window = floor(10 * log(attempt_count + 1, 10))
+        return min(window, MAX_RECENCY, attempt_count)
 
     @classmethod
     def get_all_concepts(cls, session: Session) -> Sequence[Concept]:
