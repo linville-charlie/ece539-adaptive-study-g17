@@ -98,3 +98,10 @@ instances of the question being asked, or the most recent 50 times. [1]
 
 1. This provides for 125,891 asks about a concept before the definition changes;
     or 12,589,254,116 if the last 100 results are considered instead.
+
+## Training dataset preparation
+
+Dataset organization and conversion (Aniketh Kancherla): see
+[TRAINING_DATA.md](docs/TRAINING_DATA.md) for EdNet downloads, shared SQLite
+storage, learner splits, and the six-feature target export with separate labels
+and safe history cutoffs.
