@@ -1,2 +1,9 @@
 **/__pycache__
 .vscode
+
+# Author: Aniketh Kancherla
+# Local runtimes and downloaded/generated datasets
+.tools/
+.venv/
+.ruff_cache/
+data/
