@@ -29,9 +29,8 @@ from sqlalchemy.orm import Session
 
 from ece539_adaptive_study_g17.database.attempt import Attempt
 from ece539_adaptive_study_g17.database.concept import (
-    RECENT_ATTEMPT_CAP,
+    MAX_RECENCY,
     Concept,
-    recent_window_size,
 )
 from ece539_adaptive_study_g17.database.database_controller import DatabaseController
 from ece539_adaptive_study_g17.database.field import Field
@@ -101,7 +100,7 @@ def test_recent_only_uses_newest_attempts(session: Session) -> None:
     old_count, new_count = 7, 13
     fast_ms, slow_ms = 1000, 5000
     answers = [(slow_ms, False)] * old_count + [(fast_ms, True)] * new_count
-    assert recent_window_size(len(answers)) == new_count
+    assert Concept._recent_window_size(len(answers)) == new_count
 
     data = make_concept(session, answers).get_evaluation_data()
 
@@ -119,8 +118,8 @@ def test_streak_resets_on_latest_wrong_answer(session: Session) -> None:
 
 def test_recent_window_never_exceeds_attempts() -> None:
     for attempt_count in range(30):
-        assert recent_window_size(attempt_count) <= attempt_count
+        assert Concept._recent_window_size(attempt_count) <= attempt_count
 
 
 def test_recent_window_is_capped() -> None:
-    assert recent_window_size(1_000_000) == RECENT_ATTEMPT_CAP
+    assert Concept._recent_window_size(1_000_000) == MAX_RECENCY

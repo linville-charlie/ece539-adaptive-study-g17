@@ -22,21 +22,23 @@
 # This file header was last modified 25 Nov 2026.
 """Manages database and project concepts."""
 
-import math
 from collections.abc import Sequence
 from dataclasses import dataclass
+from math import floor, log
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import ForeignKey, select
+from sqlalchemy.orm import Mapped, Session, mapped_column, relationship, selectinload
 
 from ece539_adaptive_study_g17.database import CONCEPT_TABLE, FIELD_TABLE_ID
+from ece539_adaptive_study_g17.database.attempt import Attempt
 from ece539_adaptive_study_g17.database.base_table import _BaseDatabaseTable
 from ece539_adaptive_study_g17.database.fact import Fact
 
 if TYPE_CHECKING:
-    from ece539_adaptive_study_g17.database.attempt import Attempt
     from ece539_adaptive_study_g17.database.field import Field
+
+MAX_RECENCY = 50
 
 
 class Concept(_BaseDatabaseTable):
@@ -61,66 +63,85 @@ class Concept(_BaseDatabaseTable):
     )
 
     def get_evaluation_data(self) -> ConceptEvaluationData:
-        """Get the historic data for use in selection.
+        """Get the historic data for use in selection."""
 
-        A concept with no attempts gets zeros everywhere.
-        """
-        # Oldest first. The relationship is already ordered when loaded from the
-        # database; sorting again also covers attempts added in this session.
-        attempts = sorted(self.attempts, key=lambda attempt: attempt.timestamp_ms)
-        recent = attempts[len(attempts) - recent_window_size(len(attempts)) :]
+        def _get_accuracy(attempts: list[Attempt]) -> float:
+            return sum([1 if attempt.was_correct else 0 for attempt in attempts]) / len(
+                attempts
+            )
 
-        # Count correct answers in a row, walking back from the newest attempt.
-        streak = 0
-        for attempt in reversed(attempts):
-            if not attempt.was_correct:
-                break
-            streak += 1
+        def _get_avg_time(attempts: list[Attempt]) -> int:
+            return sum([attempt.response_time_ms for attempt in attempts]) // len(
+                attempts
+            )
+
+        attempt_count = len(self.attempts)
+
+        if attempt_count == 0:
+            return ConceptEvaluationData(
+                concept_id=self.id,
+                attempt_count=0,
+                avg_response_time_ms=0,
+                accuracy=0,
+                recent_avg_response_time_ms=0,
+                recent_accuracy=0,
+                correct_streak=0,
+            )
+
+        recent_attempt_count = self._recent_window_size(attempt_count=attempt_count)
+        recent_attempts = self.attempts[-recent_attempt_count:]
+        average_attempt_time = _get_avg_time(self.attempts)
+        attempt_accuracy = _get_accuracy(self.attempts)
+        recent_attempt_time = _get_avg_time(recent_attempts)
+        recent_attempt_accuracy = _get_accuracy(recent_attempts)
+        try:
+            correct_streak_len = [attempt.was_correct for attempt in self.attempts][
+                ::-1
+            ].index(False)
+        except ValueError:
+            correct_streak_len = attempt_count
 
         return ConceptEvaluationData(
             concept_id=self.id,
-            attempt_count=len(attempts),
-            avg_response_time_ms=_average_response_time_ms(attempts),
-            accuracy=_accuracy(attempts),
-            recent_avg_response_time_ms=_average_response_time_ms(recent),
-            recent_accuracy=_accuracy(recent),
-            correct_streak=streak,
+            attempt_count=attempt_count,
+            avg_response_time_ms=average_attempt_time,
+            accuracy=attempt_accuracy,
+            recent_avg_response_time_ms=recent_attempt_time,
+            recent_accuracy=recent_attempt_accuracy,
+            correct_streak=correct_streak_len,
         )
 
+    @staticmethod
+    def _recent_window_size(attempt_count: int) -> int:
+        """Return how many of the newest attempts count as 'recent'.
 
-RECENT_ATTEMPT_CAP = 50
-"""The most attempts that ever count as 'recent'."""
+        Per the README: floor(10 * log10(attempt_count + 1)), at most 50, and never
+        more than the attempts that exist.
+        """
+        window = floor(10 * log(attempt_count + 1, 10))
+        return min(window, MAX_RECENCY, attempt_count)
 
+    @classmethod
+    def get_all_concepts(cls, session: Session) -> Sequence[Concept]:
+        """Return a list of all concepts stored in the database."""
+        return session.scalars(
+            select(Concept).options(selectinload(Concept.attempts))
+        ).all()
 
-def recent_window_size(attempt_count: int) -> int:
-    """Return how many of the newest attempts count as 'recent'.
-
-    Per the README: floor(10 * log10(attempt_count + 1)), at most 50, and never
-    more than the attempts that exist.
-    """
-    window = math.floor(10 * math.log10(attempt_count + 1))
-    return min(window, RECENT_ATTEMPT_CAP, attempt_count)
-
-
-def _accuracy(attempts: Sequence[Attempt]) -> float:
-    """Fraction of attempts answered correctly; 0.0 when there are none."""
-    if not attempts:
-        return 0.0
-    return sum(attempt.was_correct for attempt in attempts) / len(attempts)
-
-
-def _average_response_time_ms(attempts: Sequence[Attempt]) -> int:
-    """Mean response time, rounded to whole ms; 0 when there are none."""
-    if not attempts:
-        return 0
-    return round(sum(attempt.response_time_ms for attempt in attempts) / len(attempts))
+    @classmethod
+    def get_evaluation_data_for_all_concepts(
+        cls, session: Session
+    ) -> list[ConceptEvaluationData]:
+        """Return the evaluation data (input features) for all concepts."""
+        return [
+            concept.get_evaluation_data() for concept in cls.get_all_concepts(session)
+        ]
 
 
 @dataclass(frozen=True, slots=True)
 class ConceptEvaluationData:
     """The data stored in a concept that the selector uses to evaluate it."""
 
-    # TODO Confirm training data
     concept_id: int
     attempt_count: int
     avg_response_time_ms: int
